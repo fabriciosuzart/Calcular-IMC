@@ -4,24 +4,29 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableHighlight, TextInput, Im
 import { EventSubscriptionVendor } from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Estilos from './Styles/Estilos.js'
-
+import Peso from './Components/Peso.js'
+import Altura from './Components/Altura.js'
+import BtnCalcular from './Components/BtnCalcular.js'
+import BtnLimpar from './Components/BtnLimpar.js'
+import Result from './Components/Resultado.js'
+import Table from './Components/Table.js'
 
 export default function calcic() {
 
-  const [peso, setPeso] = useState(0)
-  const [altura, setAltura] = useState(0)
+  const [peso, setPeso] = useState('')
+  const [altura, setAltura] = useState('')
   const [resultado, setResultado] = useState(0)
   const [classi, setClassi] = useState('')
 
   const [visivel, setVisivel] = useState(false)
 
   const calcImc = () => {
-    if (peso == 0 || !peso) {
+    if (!peso) {
       alert('Informe o Peso')
       setVisivel(false)
       return
     }
-    if (altura == 0 || !altura) {
+    if (!altura) {
       alert('Informe a altura')
       setVisivel(false)
       return
@@ -52,68 +57,30 @@ export default function calcic() {
     }
   }
 
+  const clearText = () => {
+    setAltura('')
+    setClassi('')
+    setPeso('')
+    setResultado('')
+    setVisivel(false)
+  };
+
+  const mImage = () => {
+    setVisivel(!visivel)
+  }
+
   return (
     <SafeAreaView style={Estilos.corpo}>
       <View style={Estilos.titulo}>
         <Text style={Estilos.titulo}>Calculadora de IMC</Text>
       </View>
       <KeyboardAwareScrollView style={Estilos.corpo}>
-        <View style={Estilos.bloco}>
-          <Text>Informe seu peso:</Text>
-          <TextInput
-            style={Estilos.txt}
-            autoFocus={true}
-            keyboardType='numeric'
-            onChangeText={text => setPeso(text)}
-          ></TextInput>
-        </View>
-
-        <View style={Estilos.bloco}>
-          <Text>Informe sua altura:</Text>
-          <TextInput
-            style={Estilos.txt}
-            autoFocus={false}
-            keyboardType='numeric'
-            onChangeText={text => setAltura(text)}
-          ></TextInput>
-        </View>
-
-        <View style={Estilos.bloco}>
-
-          <TouchableHighlight
-            style={Estilos.btnCalc}
-            onPress={() => {
-              calcImc(setVisivel(true))
-            }
-            }
-          >
-            <Text style={Estilos.txtBtn}>Calcular IMC</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight
-            style={Estilos.btnCalc}
-            onPress={() => {
-              setVisivel(false)
-              setAltura('')
-              setPeso('')
-              setResultado('')
-            }
-            }
-          >
-            <Text style={Estilos.txtBtn}>Limpar</Text>
-          </TouchableHighlight>
-        </View>
-
-        <View style={Estilos.centro}>
-          <Text style={Estilos.result}>Resultado: {resultado} Classificação: {classi}</Text>
-        </View>
-        <View>
-          {visivel && <Image
-            source={require('./assets/Images/tabela-imc.png')}
-            style={Estilos.imgTable}
-          >
-          </Image>}
-        </View>
+        <Peso mPeso={setPeso} peso={peso} />
+        <Altura mAltura={setAltura} altura={altura} />
+        <BtnCalcular mClicar={calcImc} mImage={mImage} />
+        <BtnLimpar mLimpar={clearText} />
+        <Result resultado={resultado} classi={classi} />
+        <Table visivel={visivel} />
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
